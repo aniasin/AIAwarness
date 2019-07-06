@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BehaviorTree/BTDecorator.h"
-#include "CheckBoolVar.generated.h"
+#include "BehaviorTree/Decorators/BTDecorator_BlackboardBase.h"
+#include "Decorator_CheckBool.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class TESTINGGROUND_API UCheckBoolVar : public UBTDecorator
+class TESTINGGROUND_API UDecorator_CheckBool : public UBTDecorator_BlackboardBase
 {
 	GENERATED_BODY()
-virtual FString GetStaticDescription() const override;
+		virtual FString GetStaticDescription() const override;
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "AI")

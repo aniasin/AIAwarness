@@ -29,4 +29,8 @@ EBTNodeResult::Type UChooseWaypointTask::ExecuteTask(UBehaviorTreeComponent& Own
 
 	return EBTNodeResult::Succeeded;
 };
-//TODO override GetDescription to give feed back in BT
+
+FString UChooseWaypointTask::GetStaticDescription() const{
+	return FString::Printf(TEXT("%s: '%s'"), TEXT("Player Class"), WaypointKey.IsSet() ? *WaypointKey.SelectedKeyName.ToString() : TEXT(""))
+		.Append(FString::Printf(TEXT("\n%s: '%s'"), TEXT("PlayerKey"), IndexKey.IsSet() ? *IndexKey.SelectedKeyName.ToString() : TEXT("")));
+}

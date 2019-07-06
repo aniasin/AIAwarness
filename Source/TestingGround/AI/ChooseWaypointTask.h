@@ -24,4 +24,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		FBlackboardKeySelector bBoolVarToCheck;
 
+	virtual FString GetStaticDescription() const override;
+
 };
