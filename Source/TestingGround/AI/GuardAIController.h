@@ -11,7 +11,7 @@
 #include "Perception/AISenseConfig_Hearing.h"
 #include "GuardAIController.generated.h"
 
-
+DECLARE_MULTICAST_DELEGATE(FIsAiming);
 /**
  *
  */
@@ -31,7 +31,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float HearingRange = 1000;
 
-
+	bool bIsAiming = false;
 	//Constructor
 	AGuardAIController();
 
@@ -41,4 +41,5 @@ public:
 	bool bCanSeePlayer = false;
 	FVector LastKnownPlayerPosition;
 
+	FIsAiming OnAim;
 };

@@ -39,11 +39,12 @@ void UUpdateChaseService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	// Update the blackboard with the value of bCanSeePlayer from GuardController
 	BlackboardComp->SetValueAsBool(CanSeePlayerKey.SelectedKeyName, GuardController->bCanSeePlayer);
 
-	// if the lasCanSee is different than CanSee then update LastKnownPosition
+	// if the lasCanSee is different than CanSee then update LastKnownPosition & flip/flop Aim State
 	if (GuardController->bCanSeePlayer != bLastCanSeePlayer) {
 		BlackboardComp->SetValueAsVector(LastKnownPositionKey.SelectedKeyName, GuardController->LastKnownPlayerPosition);
 	}
 	bLastCanSeePlayer = GuardController->bCanSeePlayer;
+	
 
 	//Call to the parent TickNode
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);

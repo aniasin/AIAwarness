@@ -43,7 +43,7 @@ void AGuardAIController::OnTargetPerceptionUpdate(AActor* Actor, FAIStimulus Sti
 		LastKnownPlayerPosition = Stimulus.StimulusLocation;
 		bCanSeePlayer = Stimulus.WasSuccessfullySensed();
 		}
-	UE_LOG(LogTemp, Warning, TEXT("Guard Sees %s "), *Actor->GetName())
-
+	// flip flop Aim State
+	OnAim.Broadcast();
 }
 		

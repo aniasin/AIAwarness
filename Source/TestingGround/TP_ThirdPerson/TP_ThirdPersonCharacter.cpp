@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "AI/GuardAIController.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ATP_ThirdPersonCharacter
@@ -52,7 +53,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Set up gameplay key bindings
+	// Set up game play key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -62,7 +63,7 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
+	// "turn rate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &ATP_ThirdPersonCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
@@ -74,6 +75,27 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ATP_ThirdPersonCharacter::OnResetVR);
+}
+
+void ATP_ThirdPersonCharacter::BeginPlay(){
+	Super::BeginPlay();
+	AController* AIController = GetController();
+	if (!AIController) { return; }
+	auto PawnController = Cast<AGuardAIController>(AIController);
+
+	// Subscribe our local method to the controller update 
+	PawnController->OnAim.AddUObject(this, &ATP_ThirdPersonCharacter::IsAiming);
+
+}
+
+void ATP_ThirdPersonCharacter::Tick(float DeltaTime){
+	Super::Tick(DeltaTime);
+}
+
+void ATP_ThirdPersonCharacter::IsAiming() {
+	// Flip flop Aiming state
+	bIsAiming = !bIsAiming; 
+	UE_LOG(LogTemp, Warning, TEXT(" %s "), bIsAiming ? TEXT("Aiming") : TEXT("Not Aiming"))
 }
 
 
