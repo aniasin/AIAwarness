@@ -6,10 +6,12 @@
 #include "GameFramework/Character.h"
 #include "TP_ThirdPersonCharacter.generated.h"
 
+
 UCLASS(config=Game)
 class ATP_ThirdPersonCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -34,18 +36,19 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<class AGun> GunBlueprint;
+
 	void IsAiming();
 	UPROPERTY(BlueprintReadOnly, Category = TestingGround)
 	bool bIsAiming = false;
-	
+	UPROPERTY(BlueprintReadOnly, Category = TestingGround)
+	bool bIsShooting = false;
 
 protected:
 	virtual void BeginPlay()override;
 
 	virtual void Tick(float DeltaTime)override;
-
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -65,18 +68,12 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
-
-
+private:
+	AGun* Gun;
 
 
 };

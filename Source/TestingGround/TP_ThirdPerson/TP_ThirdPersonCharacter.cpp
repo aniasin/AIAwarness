@@ -9,6 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "AI/GuardAIController.h"
+#include "Weapons/Gun.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ATP_ThirdPersonCharacter
@@ -53,6 +54,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+
 	// Set up game play key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -69,23 +71,17 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ATP_ThirdPersonCharacter::LookUpAtRate);
 
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &ATP_ThirdPersonCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &ATP_ThirdPersonCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ATP_ThirdPersonCharacter::OnResetVR);
 }
 
 void ATP_ThirdPersonCharacter::BeginPlay(){
 	Super::BeginPlay();
+
 	AController* AIController = GetController();
 	if (!AIController) { return; }
 	auto PawnController = Cast<AGuardAIController>(AIController);
 
 	// Subscribe our local method to the controller update 
 	PawnController->OnAim.AddUObject(this, &ATP_ThirdPersonCharacter::IsAiming);
-
 }
 
 void ATP_ThirdPersonCharacter::Tick(float DeltaTime){
@@ -94,24 +90,9 @@ void ATP_ThirdPersonCharacter::Tick(float DeltaTime){
 
 void ATP_ThirdPersonCharacter::IsAiming() {
 	// Flip flop Aiming state
-	bIsAiming = !bIsAiming; 
+	bIsAiming = !bIsAiming;
+	bIsShooting = !bIsShooting;
 	UE_LOG(LogTemp, Warning, TEXT(" %s "), bIsAiming ? TEXT("Aiming") : TEXT("Not Aiming"))
-}
-
-
-void ATP_ThirdPersonCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-void ATP_ThirdPersonCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void ATP_ThirdPersonCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
 }
 
 void ATP_ThirdPersonCharacter::TurnAtRate(float Rate)

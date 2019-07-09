@@ -30,8 +30,7 @@ private:
 	float SightLoseRange = 2500;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float HearingRange = 1000;
-
-	bool bIsAiming = false;
+	
 	//Constructor
 	AGuardAIController();
 
